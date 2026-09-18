@@ -1,7 +1,7 @@
 ---
 name: plan-produccion
 description: "Trigger: frontend design, UX, mobile UX, design systems, architecture, production planning, deployment, reliability. Create evidence-based production plans."
-license: Apache-2.0
+license: MIT
 metadata:
   author: "gentleman-programming"
   version: "1.3"

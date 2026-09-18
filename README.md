@@ -54,8 +54,8 @@ Record the source location or artifact revision, authority, freshness or reviewe
 
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) for the review and validation path.
 - Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). **Do not report security vulnerabilities in public issues.**
-- Review the [Apache License 2.0](LICENSE) before reuse.
+- Review the [MIT License](LICENSE) before reuse.
 
 ## License
 
-Copyright 2026 Reaan06. Released under the Apache License 2.0; see [LICENSE](LICENSE).
+Copyright 2026 Reaan06. Released under the MIT License; see [LICENSE](LICENSE).
