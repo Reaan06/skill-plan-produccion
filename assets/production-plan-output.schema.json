@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gentleman-programming.dev/schemas/production-plan-output.schema.json",
+  "title": "Production Plan Structured Output",
+  "description": "Machine-checkable projection of a plan-produccion production plan.",
+  "type": "object",
+  "required": ["status", "status_rationale", "blocking_unknowns", "gates", "flows", "domains", "work_items", "risks", "acceptance", "evidence_index", "approval"],
+  "properties": {
+    "status": { "$ref": "#/$defs/planStatus" },
+    "status_rationale": { "type": "string", "minLength": 1 },
+    "blocking_unknowns": { "type": "array", "items": { "$ref": "#/$defs/blockingUnknown" } },
+    "gates": { "type": "array", "items": { "$ref": "#/$defs/gateItem" } },
+    "flows": { "type": "array", "items": { "$ref": "#/$defs/flowItem" } },
+    "domains": { "type": "array", "items": { "$ref": "#/$defs/operationalItem" } },
+    "work_items": { "type": "array", "items": { "$ref": "#/$defs/operationalItem" } },
+    "risks": { "type": "array", "items": { "$ref": "#/$defs/risk" } },
+    "acceptance": { "type": "array", "items": { "$ref": "#/$defs/acceptance" } },
+    "evidence_index": { "type": "array", "items": { "$ref": "#/$defs/evidenceRecord" } },
+    "approval": { "$ref": "#/$defs/approval" },
+    "context": { "type": "object", "additionalProperties": true },
+    "architecture": { "type": "object", "additionalProperties": true },
+    "rollout": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true,
+  "allOf": [
+    {
+      "if": {
+        "properties": { "status": { "const": "APPROVED" } }
+      },
+      "then": {
+        "properties": { "approval": { "properties": { "approved": { "const": true } } } }
+      },
+      "else": {
+        "properties": { "approval": { "properties": { "approved": { "const": false } } } }
+      }
+    }
+  ],
+  "$defs": {
+    "planStatus": {
+      "type": "string",
+      "enum": ["BLOCKED", "DRAFT", "REVIEW", "APPROVED"]
+    },
+    "evidenceStatus": {
+      "type": "string",
+      "enum": ["VERIFIED", "ASSUMED", "UNKNOWN", "DEFERRED"]
+    },
+    "decisionItem": {
+      "type": "object",
+      "required": ["decision", "evidence_source", "freshness", "owner", "status"],
+      "properties": {
+        "decision": { "type": "string", "minLength": 1 },
+        "evidence_source": { "type": "string", "minLength": 1 },
+        "freshness": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/evidenceStatus" }
+      },
+      "additionalProperties": true
+    },
+    "operationalItem": {
+      "allOf": [
+        { "$ref": "#/$defs/decisionItem" },
+        {
+          "required": ["executable_acceptance_evidence"],
+          "properties": {
+            "executable_acceptance_evidence": { "type": "string", "minLength": 1 }
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "gateItem": {
+      "allOf": [
+        { "$ref": "#/$defs/decisionItem" },
+        {
+          "required": ["executable_acceptance_evidence"],
+          "properties": {
+            "executable_acceptance_evidence": { "type": "string", "minLength": 1 }
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "flowItem": {
+      "allOf": [
+        { "$ref": "#/$defs/decisionItem" },
+        {
+          "required": ["executable_acceptance_evidence"],
+          "properties": {
+            "executable_acceptance_evidence": { "type": "string", "minLength": 1 }
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "blockingUnknown": {
+      "type": "object",
+      "required": ["name", "required_evidence", "owner", "exit_criterion"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "required_evidence": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "exit_criterion": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "risk": {
+      "type": "object",
+      "required": ["decision_response", "evidence_source", "freshness", "owner", "due_exit_criteria", "status"],
+      "properties": {
+        "decision_response": { "type": "string", "minLength": 1 },
+        "evidence_source": { "type": "string", "minLength": 1 },
+        "freshness": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "due_exit_criteria": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/evidenceStatus" }
+      },
+      "additionalProperties": true
+    },
+    "acceptance": {
+      "type": "object",
+      "required": ["decision", "executable_check", "evidence_location", "freshness", "owner", "result", "status"],
+      "properties": {
+        "decision": { "type": "string", "minLength": 1 },
+        "executable_check": { "type": "string", "minLength": 1 },
+        "evidence_location": { "type": "string", "minLength": 1 },
+        "freshness": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "result": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/evidenceStatus" }
+      },
+      "additionalProperties": true
+    },
+    "evidenceRecord": {
+      "type": "object",
+      "required": ["evidence_source", "freshness", "result"],
+      "properties": {
+        "evidence_source": { "type": "string", "minLength": 1 },
+        "freshness": { "type": "string", "minLength": 1 },
+        "result": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "approval": {
+      "type": "object",
+      "required": ["approved", "approver", "date", "scope", "evidence_snapshot"],
+      "properties": {
+        "approved": { "type": "boolean" },
+        "approver": { "type": "string", "minLength": 1 },
+        "date": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string", "minLength": 1 },
+        "evidence_snapshot": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    }
+  }
+}

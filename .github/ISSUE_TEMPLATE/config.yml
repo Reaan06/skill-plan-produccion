@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Read the README
+    url: https://github.com/Reaan06/skill-plan-produccion/blob/main/README.md
+    about: Learn how to install and use the skill.
+  - name: Read contributing guidance
+    url: https://github.com/Reaan06/skill-plan-produccion/blob/main/CONTRIBUTING.md
+    about: Follow the contribution and validation path.
+  - name: Report a security vulnerability privately
+    url: https://github.com/Reaan06/skill-plan-produccion/security/advisories/new
+    about: Never report security vulnerabilities in public issues.

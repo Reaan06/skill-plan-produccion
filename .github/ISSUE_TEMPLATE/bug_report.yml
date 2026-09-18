@@ -1,0 +1,58 @@
+name: Bug report
+description: Report incorrect or unexpected behavior in the skill.
+title: "[bug] "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the incorrect behavior in a few sentences.
+      placeholder: The skill...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest safe prompt, input, or sequence that reproduces the issue.
+      placeholder: "1. Activate the skill...\n2. Provide...\n3. Observe..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should the skill have returned or required?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Remove sensitive details.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Include the skill version, client, operating system, and relevant runtime versions.
+      placeholder: "plan-produccion 1.3.0; OpenCode-compatible client; Linux"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Add safe logs, links, or a minimal redacted output that supports the report.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I removed secrets, credentials, private paths, personal data, and other sensitive information.
+          required: true

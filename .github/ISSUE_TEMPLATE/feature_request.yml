@@ -1,0 +1,48 @@
+name: Feature request
+description: Propose an evidence-based improvement to the skill.
+title: "[feature] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user or maintainer problem is not addressed today?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Proposed outcome
+      description: What observable result should the change produce?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Which existing workflow or alternative approaches were considered, and why are they insufficient?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List executable checks or evidence that would demonstrate completion.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and compatibility
+      description: Identify affected files or contracts, intended exclusions, and compatibility considerations.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I removed secrets, private project information, and sensitive data, and I understand security vulnerabilities must be reported privately.
+          required: true

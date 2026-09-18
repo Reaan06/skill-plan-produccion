@@ -1,0 +1,69 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  repository-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Validate repository contract
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          schema = Path("assets/production-plan-output.schema.json")
+          with schema.open(encoding="utf-8") as handle:
+              json.load(handle)
+
+          skill = Path("SKILL.md")
+          skill_text = skill.read_text(encoding="utf-8")
+          references = re.findall(r"\]\(([^)]+)\)", skill_text)
+          for reference in references:
+              if reference.startswith(("http://", "https://", "#")):
+                  continue
+              target = (skill.parent / reference).resolve()
+              if not target.is_file():
+                  raise SystemExit(f"missing referenced skill file: {reference}")
+
+          markdown_files = [path for path in Path(".").rglob("*.md") if ".git" not in path.parts]
+          for path in markdown_files:
+              if not path.read_text(encoding="utf-8").strip():
+                  raise SystemExit(f"empty Markdown file: {path}")
+
+          required_statuses = (
+              "BLOCKED", "DRAFT", "REVIEW", "APPROVED",
+              "VERIFIED", "ASSUMED", "UNKNOWN", "DEFERRED",
+          )
+          status_text = "\n".join(path.read_text(encoding="utf-8") for path in markdown_files)
+          for status in required_statuses:
+              if status not in status_text:
+                  raise SystemExit(f"missing canonical status: {status}")
+
+          required_urls = (
+              "https://github.com/Reaan06/skill-plan-produccion/security/advisories/new",
+              "https://github.com/Reaan06/skill-plan-produccion/blob/main/README.md",
+              "https://github.com/Reaan06/skill-plan-produccion/blob/main/CONTRIBUTING.md",
+          )
+          all_text = "\n".join(path.read_text(encoding="utf-8") for path in Path(".").rglob("*") if path.is_file() and ".git" not in path.parts)
+          for url in required_urls:
+              if url not in all_text:
+                  raise SystemExit(f"missing canonical URL: {url}")
+
+          print(f"schema parses: {schema}")
+          print(f"referenced skill files exist: {len(references)} links checked")
+          print(f"Markdown files non-empty: {len(markdown_files)} files checked")
+          print("canonical statuses and URLs present")
+          PY
